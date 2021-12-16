@@ -114,10 +114,16 @@ main{
         
 
     }
+    .wraper-info {
+        height: auto;
+    }
     .info-section{
         width: 100%;
-        margin: 0;
+        margin: 0 24px 0 0;
         padding: 0;
+    }
+    .info-section > * { 
+        overflow-y: hidden;
     }
     .aditional-image-container > *{
         margin: 0 0 24px 0;

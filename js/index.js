@@ -6,21 +6,49 @@ let time = null;  //time in ms (5 seconds)
 const dateInput = $("#Date")
 const imgElement = $("#SkyImg")
 const cardList = $("#CardList")
+const moveLeftBtn = $('.image-move-left')
+const moverRightBtn = $('.image-move-right')
+
+
 
 
 window.onload = function(){
     let now = moment().subtract(1,'days').format("YYYY-MM-DD")
     let data =  RequestImage(now,Success,RequestError)
+    dateInput.val(now)
     Promise.resolve(data).then(response => {
         UpdateImage(response.url)
         PopulateInfo(response.title,response.explanation,response.copyright)
         console.log(response)
     })
     PopulateAdjacentYears(now)
-
+    
     
 }
-dateInput.on('change', WaitInputFinishToRequest) 
+
+moveLeftBtn.on('click', leftImage)
+moverRightBtn.on('click', rightImage)
+
+function leftImage(){
+    
+    let newDate = moment(dateInput.val()).subtract(1,'days').format("YYYY-MM-DD")
+    console.log(newDate , 'being called')
+    if(IsValidDate(newDate)){
+        dateInput.val(newDate).trigger("changeDateTrigger")
+
+
+    }
+}
+
+function rightImage() {
+    let newDate = moment(dateInput.val()).add(1,'days').format("YYYY-MM-DD")
+    if(IsValidDate(newDate)){
+        dateInput.val(newDate).trigger("changeDateTrigger")
+
+
+    }
+}
+dateInput.on('change changeDateTrigger', WaitInputFinishToRequest) 
 
 function IsValidDate(date=''){
     date = moment(date).format("YYYY-MM-DD")
@@ -29,11 +57,14 @@ function IsValidDate(date=''){
     if(!moment(date).isBefore(minDate) && !moment(date).isAfter(maxDate) && !moment(date).isLeapYear()){
         return true
     }
+    console.error(`${date} is not a valid date`)
     return false
 }
 
+
+
 function PopulateAdjacentYears(date='', amount=10) {
-    
+    ClearCardList()
     let listOfRequests = []
     for(let i = -amount; i < amount; i++ ){
         if(i > 0){
@@ -63,20 +94,25 @@ function PopulateAdjacentYears(date='', amount=10) {
             }
         }
     }
-    
+
     //resolve all requests populating the html with the cards 
     Promise.all(listOfRequests).then(responses => {
         //iterate over resolved promises
         responses.map((response,index) => {
             // create a card with id card_ + index
             console.log(response,index)
-            let card = CardFactory(response.url, response.title,response.copyright,response.explanation,index)
+            let card = CardFactory(response.url, response.title, response.copyright, response.explanation, index, response.date)
             // put the card in the card list using innerHTML
             cardList.append(card) 
         })
     })
 }
 
+// ideally, i would implement a pooling system to properly track the cards 
+// and not rendering them twice, instead, just finding then in the template, and , replacing it's data 
+function ClearCardList(){
+    cardList.html('')
+}
 
 
 function WaitInputFinishToRequest(e) {
@@ -125,7 +161,7 @@ function PopulateInfo(title='',description='',copyright=''){
     $('#ImgCopyright').text("\251 Copyright - " + copyright)
 }
 
-function CardFactory(url='',title='',copyrcopyrightigth='',description='',identifier=0){
+function CardFactory(url='',title='', copyright='', description='', identifier=0, date='' ){
     const card = {
         imgUrl: '',
         title: '',
@@ -147,33 +183,53 @@ function CardFactory(url='',title='',copyrcopyrightigth='',description='',identi
             this.description = description
 
         },
+        setDate: function(date='') { 
+            //validation example
+            date = moment(date).format('YYYY-MM-DD')
+            this.date = date
+
+        },
         setIdentifier: function(identifier=0) { 
             this.identifier = identifier
 
         },
         
-        _Create:  function (url='',title='',copyrcopyrightigth='',description='',identifier=0){
+        _Create:  function (url='',title='',copyright='',description='', date='',identifier=0){
             // the utility of having a setup like this is that, all the inputs can be validated on their own setters
             // although in that case, we don't actually need to validate
             this.setImgUrl(url)
             this.setTitle(title)
-            this.setCopyright(copyrcopyrightigth)
+            this.setCopyright(copyright)
             this.setdescription(description)
             this.setIdentifier(identifier)
+            this.setDate(date)
 
             let card = $('<div>').addClass("card")
             let imgContainer = $('<div>').addClass("card__img-container").attr('id','card_'+identifier.toString())
             let img = $('<img>').addClass("img-container__img").attr('src',this.imgUrl.toString())
-            let h3 = $('<h3>').addClass("card__img-title").text(this.title.toString() )
-            let p = $('<p>').addClass("card__description").text(this.description.toString())
+            let cardTitle = $('<h3>').addClass("card__img-title").text(this.title.toString())
+            let cardDescription = $('<p>').addClass("card__description").text(this.description.toString())
+            let cardDate = $('<p>').addClass("card__date").text(this.date)
+            
+            card.on('click',function(e) {
 
+                if(e.target == e.currentTarget.querySelector('.img-container__img')){
+                    let inputDate = $('#Date');
+    
+                    console.log(e)
+                    let card = $(e.currentTarget.querySelector(".card__date"))
+                    inputDate.val(card.text()).trigger('changeDateTrigger')
+
+                }
+            })
 
             imgContainer.append(img)
             card.append(imgContainer)
-            card.append(h3)
-            card.append(p)
+            card.append(cardTitle)
+            card.append(cardDescription)
+            card.append(cardDate)
             return card
         }
     }
-    return card._Create(url,title,copyrcopyrightigth,description,identifier)
+    return card._Create(url,title,copyright,description,date,identifier)
 }

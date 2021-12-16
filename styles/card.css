@@ -39,13 +39,14 @@
     object-fit: cover;
 }
 .card__img-title{
+    font-size: 1.0rem;
     padding: 10px 10px 0 10px; 
 }
 .card__description {
 
     text-align: justify;
     padding: 10px 10px; 
-    font-size: 0.75rem; 
+    font-size: 0.80rem; 
     line-height: 1.5em;
     height: 3rem;
     overflow: hidden;
@@ -54,9 +55,16 @@
     width: 100%;
 }
 
+.card__date{
+    text-align: end;
+    margin-top: auto;
+    font-size: 0.75rem;
+    padding: 0 10px 10px 10px; 
+}
+
 @media (max-width: 600px) {
     .card {
-        display: inline-block;
+        /* display: inline-block; */
         width:100vw;
         height: auto;
         min-height: 100vw;
@@ -65,7 +73,8 @@
         padding: 0;
     }
     .card__img-container{
-        min-height: 90vw;
+        display: block;
+        /* min-height: 90vw; */
         max-height: 90vw;
     }
     .card__img-title{
