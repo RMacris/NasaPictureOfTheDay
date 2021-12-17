@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Astronomy Picture of the Day</title>
     <link rel="stylesheet" href="./styles/global.css">
     <link rel="stylesheet" href="./styles/image-wraper.css">
     <link rel="stylesheet" href="./styles/main.css">
@@ -12,6 +12,11 @@
 </head>
 <body>
     
+    <header>
+        <h1>
+            Astronomy Picture of the Day
+        </h1>
+    </header>
     
     <main>
         <section class="image-section">
@@ -19,8 +24,11 @@
                 <div class="container-image">
                     <div class="image-move-left">❮</div>
                     <div class="image-move-right">❯</div>
-                    <div class="image-wraper">
+                    <div id="ImageWraper" class="image-wraper">
                         <img id="SkyImg" class="" src="" alt="" srcset="">
+                    </div>
+                    <div id="VideoWraper" class="image-wraper">
+                        <iframe id="Video" src="" frameborder="0"></iframe>
                     </div>
                 </div>
             </div>
@@ -32,7 +40,7 @@
         </section>
         <section class="info-section">
             <div class="wraper-info">
-                <h1 id="Title">Selecione uma Data</h1>
+                <h1 id="Title">Select a date</h1>
                 <p class=""></p>
                 <input id="Date" type="date" name="">
                 <div class='img-info-container'>

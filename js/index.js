@@ -17,7 +17,7 @@ window.onload = function(){
     let data =  RequestImage(now,Success,RequestError)
     dateInput.val(now)
     Promise.resolve(data).then(response => {
-        UpdateImage(response.url)
+        UpdateContent(response.url, response.media_type)
         PopulateInfo(response.title,response.explanation,response.copyright)
         console.log(response)
     })
@@ -25,7 +25,28 @@ window.onload = function(){
     
     
 }
+function UpdateContent(url, mediaType){
+    console.log(mediaType)
+    if(mediaType == 'video'){
+        $("#ImageWraper").css("display",'none');
+        $("#VideoWraper").css("display",'flex',);
+        UpdateVideo(url)
 
+    }
+    else if(mediaType == 'image'){
+        $("#ImageWraper").css("display",'flex');
+        $("#VideoWraper").css("display",'none',);
+        UpdateImage(url)
+        UpdateVideo('')
+    }
+
+}
+function UpdateVideo(url){ 
+    
+    $("#Video").attr('src', url )
+
+   
+}
 moveLeftBtn.on('click', leftImage)
 moverRightBtn.on('click', rightImage)
 
@@ -100,8 +121,8 @@ function PopulateAdjacentYears(date='', amount=10) {
         //iterate over resolved promises
         responses.map((response,index) => {
             // create a card with id card_ + index
-            console.log(response,index)
-            if(!response.media_type != 'video' && !response.media_type != 'other'){
+            console.log(response.media_type  , !response.media_type)
+            if(response.media_type != 'video' && response.media_type != 'other'){
                 let card = CardFactory(response.url, response.title, response.copyright, response.explanation, index, response.date)
                 // put the card in the card list using innerHTML
                 cardList.append(card) 
@@ -127,7 +148,7 @@ function WaitInputFinishToRequest(e) {
         let data = RequestImage(e.target.value,Success,RequestError)
         console.log(data)
         Promise.resolve(data).then(response => {
-            UpdateImage(response.url)
+            UpdateContent(response.url,response.media_type)
             PopulateInfo(response.title,response.explanation,response.copyright)
             console.log(response)
         })

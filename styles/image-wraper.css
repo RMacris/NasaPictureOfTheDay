@@ -94,15 +94,19 @@
     object-fit: contain;
 
 }
+#VideoWraper {
+    position: absolute;
+}
+#Video{
+    width: 100%;
+    height: 100%;
+}
 
 .img-info-container{
     display: flex;
     flex-direction: column;
 }
 
-#Date {
-    margin-bottom: 24px;    
-}
 
 #ImgDescription{ 
     text-transform: inherit;

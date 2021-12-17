@@ -6,7 +6,7 @@
     max-height: 25vw;
     border-radius: 2px;
     overflow: hidden;
-    background-color: #333;
+    background-color: #191735;
     box-shadow: 
     0px 0px 8px 0px rgba(0, 0, 0, 0.1),
     0px 0px 2px 0px rgba(0, 0, 0, 0.15);
@@ -84,7 +84,7 @@
     }
     .card__img-container{
         display: block;
-        /* min-height: 90vw; */
+        min-height: 74vw;
         max-height: 90vw;
     }
     .card__img-title{
