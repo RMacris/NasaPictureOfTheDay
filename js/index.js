@@ -101,9 +101,12 @@ function PopulateAdjacentYears(date='', amount=10) {
         responses.map((response,index) => {
             // create a card with id card_ + index
             console.log(response,index)
-            let card = CardFactory(response.url, response.title, response.copyright, response.explanation, index, response.date)
-            // put the card in the card list using innerHTML
-            cardList.append(card) 
+            if(!response.media_type != 'video' && !response.media_type != 'other'){
+                let card = CardFactory(response.url, response.title, response.copyright, response.explanation, index, response.date)
+                // put the card in the card list using innerHTML
+                cardList.append(card) 
+
+            }
         })
     })
 }
@@ -212,14 +215,11 @@ function CardFactory(url='',title='', copyright='', description='', identifier=0
             let cardDate = $('<p>').addClass("card__date").text(this.date)
             
             card.on('click',function(e) {
-
+                //only triggers the functionality if the image is the taret of the event of click
                 if(e.target == e.currentTarget.querySelector('.img-container__img')){
                     let inputDate = $('#Date');
-    
-                    console.log(e)
                     let card = $(e.currentTarget.querySelector(".card__date"))
                     inputDate.val(card.text()).trigger('changeDateTrigger')
-
                 }
             })
 
